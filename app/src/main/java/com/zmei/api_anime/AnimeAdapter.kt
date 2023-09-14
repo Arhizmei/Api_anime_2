@@ -4,15 +4,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.zmei.api_anime.databinding.ImageItemBinding
 
 class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
-    val animeList = ArrayList<Image_Anime>()
+    private val animeList = ArrayList<Image_Anime>()
 
     class AnimeHolder(item: View) : RecyclerView.ViewHolder(item) {
         private val binding = ImageItemBinding.bind(item)
         fun bind(imageAnime: Image_Anime) = with(binding) {
-            imageViewAnime.setImageResource(imageAnime.imageId)
+            Glide.with(binding.root.context)
+                .load(imageAnime.imageId)
+                .into(binding.imageViewAnime)
             textTitle.text = imageAnime.title
         }
     }

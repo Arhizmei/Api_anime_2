@@ -7,11 +7,11 @@ import com.zmei.api_anime.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: AnimeAdapter
-    private val imageList = mutableListOf<ImageModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -27,15 +27,20 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val image = response.body()
                         if (image != null) {
-                            imageList.add(image)
-                            val imageAnime = Image_Anime(imageList[index], "Image $index")
+                            val imageAnime = Image_Anime(image, "Image $index")
                             adapter.addImage(imageAnime)
                             index++
                         }
                     }
                 }
+
                 override fun onFailure(call: retrofit2.Call<ImageModel?>, t: Throwable) {
-                    // Обработайте ошибку загрузки изображения
+                    var index = 0
+                    val imageUrl = "https://i.waifu.pics/Tj6Wzwo.png"
+                    val image = ImageModel(imageUrl)
+                    val imageAnime = Image_Anime(image, "Image $index")
+                    adapter.addImage(imageAnime)
+                    index++
                 }
             })
         }

@@ -8,13 +8,13 @@ import com.bumptech.glide.Glide
 import com.zmei.api_anime.databinding.ImageItemBinding
 
 class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
-    private val animeList = ArrayList<Image_Anime>()
+    val animeList = ArrayList<Image_Anime>()
 
     class AnimeHolder(item: View) : RecyclerView.ViewHolder(item) {
         private val binding = ImageItemBinding.bind(item)
         fun bind(imageAnime: Image_Anime) = with(binding) {
-            Glide.with(binding.root.context)
-                .load(imageAnime.imageId)
+            Glide.with(root.context)
+                .load(imageAnime.imageId.url)
                 .into(binding.imageViewAnime)
             textTitle.text = imageAnime.title
         }

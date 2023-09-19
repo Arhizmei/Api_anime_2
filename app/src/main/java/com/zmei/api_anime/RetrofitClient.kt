@@ -3,7 +3,6 @@ package com.zmei.api_anime
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import okhttp3.logging.HttpLoggingInterceptor
 
 class RetrofitClient(private val okHttpClient: OkHttpClient) {
     private val BASE_URL = "https://api.waifu.pics/"

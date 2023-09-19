@@ -14,12 +14,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import okhttp3.logging.HttpLoggingInterceptor
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: AnimeAdapter
     private lateinit var viewModel: MyViewModel
-    var loadedItemCount = 0 // Количество загруженных элементов
+    var loadedItemCount = 0
     var isLoading = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +35,7 @@ class MainActivity : AppCompatActivity() {
         binding.rcView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-                if (!isLoading && lastVisibleItem >= loadedItemCount - 10) {
-                    loadMoreData(retrofitClient)
-                }
+                loadMoreData(retrofitClient)
             }
         })
         loadMoreData(retrofitClient)

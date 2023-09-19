@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.zmei.api_anime.databinding.ImageItemBinding
 
-class AnimeAdapter(private val viewModel: MyViewModel, private val loadMoreListener: () ->Unit) : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
+class AnimeAdapter(viewModel: MyViewModel, private val loadMoreListener: () ->Unit) : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
     private val animeList = viewModel.imageList
 
     class AnimeHolder(item: View) : RecyclerView.ViewHolder(item) {

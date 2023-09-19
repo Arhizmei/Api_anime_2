@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.zmei.api_anime.databinding.ImageItemBinding
 
-class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
-    val animeList = ArrayList<Image_Anime>()
+class AnimeAdapter(private val loadMoreListener: () ->Unit) : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
+    private val animeList = ArrayList<Image_Anime>()
 
     class AnimeHolder(item: View) : RecyclerView.ViewHolder(item) {
         private val binding = ImageItemBinding.bind(item)
@@ -31,6 +31,9 @@ class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
 
     override fun onBindViewHolder(holder: AnimeHolder, position: Int) {
         holder.bind(animeList[position])
+        if(position == animeList.size-1){
+            loadMoreListener()
+        }
     }
 
     fun addImage(imageAnime: Image_Anime) {

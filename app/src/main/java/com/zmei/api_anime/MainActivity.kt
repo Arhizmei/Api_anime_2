@@ -12,39 +12,40 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: AnimeAdapter
+    var index = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.rcView.layoutManager = GridLayoutManager(this, 3)
-        adapter = AnimeAdapter()
+        adapter = AnimeAdapter{loadMoreData()}
         binding.rcView.adapter = adapter
-        var index = 0
-        binding.buttonAdd.setOnClickListener {
-            val waifuApiService = RetrofitClient.retrofit.create(WaifuApiService::class.java)
-            waifuApiService.getWaifuImage().enqueue(object : Callback<ImageModel?> {
-                override fun onResponse(call: Call<ImageModel?>, response: Response<ImageModel?>) {
-                    if (response.isSuccessful) {
-                        val image = response.body()
-                        if (image != null) {
-                            val imageAnime = Image_Anime(image, "Image $index")
-                            adapter.addImage(imageAnime)
-                            index++
-                        }
-                    }
-                }
 
-                override fun onFailure(call: retrofit2.Call<ImageModel?>, t: Throwable) {
-                    var index = 0
-                    val imageUrl = "https://i.waifu.pics/Tj6Wzwo.png"
-                    val image = ImageModel(imageUrl)
-                    val imageAnime = Image_Anime(image, "Image $index")
-                    adapter.addImage(imageAnime)
-                    index++
-                }
-            })
-        }
+
     }
 
+    fun loadMoreData() {
 
+        val waifuApiService = RetrofitClient.retrofit.create(WaifuApiService::class.java)
+        waifuApiService.getWaifuImage().enqueue(object : Callback<ImageModel?> {
+            override fun onResponse(call: Call<ImageModel?>, response: Response<ImageModel?>) {
+                if (response.isSuccessful) {
+                    val image = response.body()
+                    if (image != null) {
+                        val imageAnime = Image_Anime(image, "Image $index")
+                        adapter.addImage(imageAnime)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<ImageModel?>, t: Throwable) {
+                var index = 0
+                val imageUrl = "https://i.waifu.pics/Tj6Wzwo.png"
+                val image = ImageModel(imageUrl)
+                val imageAnime = Image_Anime(image, "Image $index")
+                adapter.addImage(imageAnime)
+                index++
+            }
+        })
+    }
 }

@@ -40,12 +40,12 @@ class MainActivity : AppCompatActivity() {
         })
         loadMoreData(retrofitClient)
     }
-
     private fun loadMoreData(retrofitClient: RetrofitClient) {
         if (isLoading) {
             return
         }
         isLoading = true
+        binding.button.setOnClickListener {
         val waifuApiService = retrofitClient.retrofit.create(WaifuApiService::class.java)
         waifuApiService.getWaifuImage().enqueue(object : Callback<ImageModel?> {
             override fun onResponse(call: Call<ImageModel?>, response: Response<ImageModel?>) {
@@ -68,5 +68,6 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
+    }
     }
 }

@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.zmei.api_anime.databinding.ImageItemBinding
 
-class AnimeAdapter(viewModel: MyViewModel, private val loadMoreListener: () ->Unit) : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
-    private val animeList = viewModel.imageList
+class AnimeAdapter(private val loadMoreListener: () ->Unit) : RecyclerView.Adapter<AnimeAdapter.AnimeHolder>() {
+    private var animeList: List<Image_Anime> = listOf()
 
     class AnimeHolder(item: View) : RecyclerView.ViewHolder(item) {
         private val binding = ImageItemBinding.bind(item)
@@ -36,8 +36,8 @@ class AnimeAdapter(viewModel: MyViewModel, private val loadMoreListener: () ->Un
         }
     }
 
-    fun addImage(imageAnime: Image_Anime) {
-        animeList.add(imageAnime)
+    fun addImage(animeList: List<Image_Anime>) {
+        this.animeList = animeList
         notifyDataSetChanged()
     }
 }

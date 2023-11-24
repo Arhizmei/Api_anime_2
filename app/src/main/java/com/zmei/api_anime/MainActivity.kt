@@ -2,23 +2,17 @@ package com.zmei.api_anime
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.zmei.api_anime.databinding.ActivityMainBinding
 import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import okhttp3.logging.HttpLoggingInterceptor
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var adapter: AnimeAdapter
     private lateinit var viewModel: MyViewModel
-    var loadedItemCount = 0
     var isLoading = false
     val okHttpClient = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -31,38 +25,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.rcView.layoutManager = GridLayoutManager(this, 3)
         viewModel = ViewModelProvider(this).get(MyViewModel::class.java)
-        adapter = AnimeAdapter { loadMoreData() }
+        adapter = AnimeAdapter { loadMoreListener() }
         binding.rcView.adapter = adapter
-//        binding.rcView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                if (!isLoading) {
-//                    isLoading = true
-//                    viewModel.loadMoreData(waifuApiService, loadedItemCount) { success ->
-//                        if (success) {
-//                            loadedItemCount++
-//                            adapter.addImage(viewModel.imageList)
-//                            Log.d("mylog", "${loadedItemCount}")
-//                        } else {
-//                            Toast.makeText(this@MainActivity, "Error", Toast.LENGTH_LONG).show()
-//                        }
-//                        isLoading = false
-//                    }
-//                }
-//            }
-//        })
-
-        loadMoreData()
+        loadMoreListener()
     }
 
-    private fun loadMoreData() {
+    private fun loadMoreListener() {
         if (!isLoading) {
             isLoading = true
-            viewModel.loadMoreData(waifuApiService, loadedItemCount) { success ->
+            viewModel.loadData(waifuApiService) { success ->
                 if (success) {
-                    loadedItemCount++
                     adapter.addImage(viewModel.imageList)
-                    Log.d("mylog", "${loadedItemCount}")
                 } else {
                     Toast.makeText(this@MainActivity, "Error", Toast.LENGTH_LONG).show()
                 }

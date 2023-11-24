@@ -1,5 +1,7 @@
 package com.zmei.api_anime
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,13 +11,10 @@ import retrofit2.Response
 
 class MyViewModel : ViewModel() {
     private var itemCount = 0
-    val imageList = mutableListOf<Image_Anime>()
+    private val _imageList = MutableLiveData<List<Image_Anime>>()
+    val imageList: LiveData<List<Image_Anime>> get() = _imageList
 
-
-    fun loadData(
-        waifuApiService: WaifuApiService,
-        callback: (Boolean) -> Unit
-    ) {
+    fun loadData(waifuApiService: WaifuApiService) {
         waifuApiService.getWaifuImage().enqueue(object : Callback<ImageModel?> {
             override fun onResponse(call: Call<ImageModel?>, response: Response<ImageModel?>) {
                 if (response.isSuccessful) {
@@ -23,18 +22,13 @@ class MyViewModel : ViewModel() {
                     if (image != null) {
                         itemCount++
                         val imageAnime = Image_Anime(image, "Image $itemCount")
-                        imageList.add(imageAnime)
-                        callback(true)
-                    } else {
-                        callback(false)
+                        _imageList.value = (_imageList.value ?: emptyList()) + listOf(imageAnime)
                     }
-                } else {
-                    callback(false)
                 }
             }
 
-            override fun onFailure(call: retrofit2.Call<ImageModel?>, t: Throwable) {
-                callback(false)
+            override fun onFailure(call: Call<ImageModel?>, t: Throwable) {
+                // Обработка ошибок
             }
         })
     }

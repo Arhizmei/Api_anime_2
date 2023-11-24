@@ -27,20 +27,17 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MyViewModel::class.java)
         adapter = AnimeAdapter { loadMoreListener() }
         binding.rcView.adapter = adapter
+        viewModel.imageList.observe(this, { updatedImageList ->
+            adapter.addImage(updatedImageList)
+            isLoading = false
+        })
         loadMoreListener()
     }
 
     private fun loadMoreListener() {
         if (!isLoading) {
             isLoading = true
-            viewModel.loadData(waifuApiService) { success ->
-                if (success) {
-                    adapter.addImage(viewModel.imageList)
-                } else {
-                    Toast.makeText(this@MainActivity, "Error", Toast.LENGTH_LONG).show()
-                }
-                isLoading = false
-            }
+            viewModel.loadData(waifuApiService)
         }
     }
 }

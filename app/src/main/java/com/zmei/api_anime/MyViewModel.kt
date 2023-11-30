@@ -13,8 +13,12 @@ class MyViewModel : ViewModel() {
     private var itemCount = 0
     private val _imageList = MutableLiveData<List<Image_Anime>>()
     val imageList: LiveData<List<Image_Anime>> get() = _imageList
-
-    fun loadData(waifuApiService: WaifuApiService) {
+    val okHttpClient = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }).build()
+    val retrofitClient = RetrofitClient(okHttpClient)
+    val waifuApiService = retrofitClient.retrofit.create(WaifuApiService::class.java)
+    fun loadData( ) {
         waifuApiService.getWaifuImage().enqueue(object : Callback<ImageModel?> {
             override fun onResponse(call: Call<ImageModel?>, response: Response<ImageModel?>) {
                 if (response.isSuccessful) {

@@ -6,13 +6,17 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.zmei.api_anime.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var adapter: AnimeAdapter
-    private lateinit var viewModel: MyViewModel
+    @Inject
+    lateinit var viewModel: MyViewModel
     var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

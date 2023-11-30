@@ -12,7 +12,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class MyViewModel @Inject constructor() {
+class MyViewModel @Inject constructor(): ViewModel() {
     private var itemCount = 0
     private val _imageList = MutableLiveData<List<Image_Anime>>()
     val imageList: LiveData<List<Image_Anime>> get() = _imageList

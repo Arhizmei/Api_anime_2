@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
         val loadMoreListener = { loadMoreListener() }
         adapter = AnimeAdapter(loadMoreListener)
         binding.rcView.adapter = adapter
-        viewModel.imageList.observe(this, { updatedImageList ->
+        viewModel.imageList.observe(this) { updatedImageList ->
             adapter.addImage(updatedImageList)
             isLoading = false
-        })
+        }
         loadMoreListener()
     }
 

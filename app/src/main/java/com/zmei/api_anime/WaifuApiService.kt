@@ -6,5 +6,5 @@ import retrofit2.http.GET
 
 interface WaifuApiService {
     @GET("sfw/waifu")
-    fun getWaifuImage(): Call<ImageModel>
+    suspend fun getWaifuImage(): ImageModel
 }

@@ -3,7 +3,11 @@ package com.zmei.api_anime
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -21,22 +25,24 @@ class MyViewModel @Inject constructor(): ViewModel() {
     }).build()
     val retrofitClient = RetrofitClient(okHttpClient)
     val waifuApiService = retrofitClient.retrofit.create(WaifuApiService::class.java)
-    fun loadData( ) {
-        waifuApiService.getWaifuImage().enqueue(object : Callback<ImageModel?> {
-            override fun onResponse(call: Call<ImageModel?>, response: Response<ImageModel?>) {
-                if (response.isSuccessful) {
-                    val image = response.body()
-                    if (image != null) {
-                        itemCount++
-                        val imageAnime = Image_Anime(image, "Image $itemCount")
-                        _imageList.value = (_imageList.value ?: emptyList()) + listOf(imageAnime)
-                    }
-                }
+    suspend fun loadData() {
+        try {
+            val response = withContext(Dispatchers.IO) {
+                waifuApiService.getWaifuImage().execute()
             }
 
-            override fun onFailure(call: Call<ImageModel?>, t: Throwable) {
+            if (response.isSuccessful) {
+                val image = response.body()
+                if (image != null) {
+                    itemCount++
+                    val imageAnime = Image_Anime(image, "Image $itemCount")
+                    _imageList.value = (_imageList.value ?: emptyList()) + listOf(imageAnime)
+                }
+            } else {
                 // Обработка ошибок
             }
-        })
+        } catch (e: Exception) {
+            // Обработка исключений
+        }
     }
 }

@@ -12,12 +12,14 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Inject
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var adapter: AnimeAdapter
-    val viewModel: MyViewModel by viewModels()
+    val viewModel by viewModels<MyViewModel>()
     var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.rcView.layoutManager = GridLayoutManager(this, 3)
-       // viewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+        //viewModel = ViewModelProvider(this).get(MyViewModel::class.java)
         val loadMoreListener = { loadMoreListener() }
         adapter = AnimeAdapter(loadMoreListener)
         binding.rcView.adapter = adapter
@@ -39,7 +41,9 @@ class MainActivity : AppCompatActivity() {
     private fun loadMoreListener() {
         if (!isLoading) {
             isLoading = true
-            viewModel.loadData()
+            lifecycleScope.launch {
+                viewModel.loadData()
+            }
         }
     }
 }
